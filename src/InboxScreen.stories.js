@@ -71,16 +71,27 @@ ArchiveTask.play = async ({ canvasElement }) => {
   await expect(archiveCheckbox.checked).toBe(true);
 };
 
+// InboxScreenコンポーネントのコピーを作成して、ストーリーを作成。
 export const EditTask = Template.bind({});
 EditTask.parameters = Default.parameters;
+// play関数として、インタラクションテストの内容を指定
 EditTask.play = async ({ canvasElement }) => {
+  // 検索範囲のルートを指定
   const canvas = within(canvasElement);
+
+  // 引数のテキストを用いて、対象のタスクを検索するための関数を定義
   const getTask = (name) => canvas.findByRole("listitem", { name });
 
+  // "Fix bug in input error state" という内容のタスクを検索
   const itemToEdit = await getTask("Fix bug in input error state");
+
+  // 対象のタスクの子要素のinput属性を取得
   const taskInput = await findByRole(itemToEdit, "textbox");
 
+  // タスクの内容に追記
   await userEvent.type(taskInput, " and disabled state");
+
+  // 内容の変更が意図したものであるかを確認
   await expect(taskInput.value).toBe(
     "Fix bug in input error state and disabled state"
   );
